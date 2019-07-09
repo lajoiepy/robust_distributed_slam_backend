@@ -1,0 +1,153 @@
+function listen_for_start_optimization_flag() {
+    neighbors.listen("start_optimization", 
+        function(vid, value, rid_received) {     
+            is_neighbor = 0
+            neighbors_in_communication_range = neighbors.filter(
+                function(rid, data) { 
+                    return data.distance < (100 * SEPARATOR_RANGE) # ARGoS simulation is in centimeters
+                }
+            )
+            neighbors_in_communication_range.foreach( function(rid, data) {
+                    if (rid == rid_received) {
+                        is_neighbor = 1
+                    }
+                }
+            )
+            if (is_neighbor) {
+                receive_adjacency_vector_from_neighbor(rid_received, value)
+                update_neighbor_has_started_optimization_flag(rid_received)
+            }
+        }
+    )
+}
+
+function start_optimization() {
+    # Add current neigbors
+    neighbors_in_separator_range = neighbors.filter(
+      function(rid, data) { 
+        return data.distance < (100 * SEPARATOR_RANGE) # ARGoS simulation is in centimeters
+      }
+    )
+    neighbors_in_separator_range.foreach( function(rid, data) {
+        add_neighbor_within_communication_range(rid)
+      }
+    )
+    # Set speeds
+    current_translation_speed = SLOW_TRANSLATION_DURING_OPTIMIZATION
+    current_max_rotation_speed = SLOW_ROTATION_DURING_OPTIMIZATION
+}
+
+function send_rotation_estimates_to_neighbors() {
+    rotation_estimates_table = {}
+    number_of_estimates_to_send = 0
+    neighbors_in_separator_range.foreach( function(neighbor_in_range_id, neighbor_in_range_data) {
+        # Update rotation_estimates_to_send structure
+        compute_and_update_rotation_estimates_to_send(neighbor_in_range_id)
+        if (size(rotation_estimates_to_send) > 0){
+            rotation_estimates_table[number_of_estimates_to_send] = rotation_estimates_to_send
+            number_of_estimates_to_send = number_of_estimates_to_send + 1
+        }
+      }
+    )
+    if (size(rotation_estimates_table) > 0 and optimizer_phase() == 0){
+        # Send the rotation estimates
+        neighbors.broadcast("rotation_estimates", rotation_estimates_table)
+    }
+}
+
+function receive_and_update_rotation_estimates_from_neighbors() {
+    neighbors.listen("rotation_estimates", 
+        function(vid, value, rid) {     
+            update_neighbor_rotation_estimates(value)
+            has_received_rotation_estimates = 1
+        }
+    )
+    if (optimizer_state() == 3) {
+        if (has_received_rotation_estimates) {
+            # Check and reset flags if needed
+            check_if_all_estimation_done_and_reset()
+            if (optimizer_phase() == 1) {
+                estimate_rotation_and_update_rotation()
+            }
+        }
+    }
+}
+
+function send_pose_estimates_to_neighbors() {
+    pose_estimates_table = {}
+    number_of_estimates_to_send = 0
+    neighbors_in_separator_range.foreach( function(neighbor_in_range_id, neighbor_in_range_data) {
+        # Update pose_estimates_to_send structure
+        compute_and_update_pose_estimates_to_send(neighbor_in_range_id)
+        if (size(pose_estimates_to_send) > 0){
+            pose_estimates_table[number_of_estimates_to_send] = pose_estimates_to_send
+            number_of_estimates_to_send = number_of_estimates_to_send + 1
+        }
+      }
+    )
+    if (size(pose_estimates_table) > 0 and optimizer_phase() == 0){
+        # Send the pose estimates
+        neighbors.broadcast("pose_estimates", pose_estimates_table)
+    }
+}
+
+function receive_and_update_pose_estimates_from_neighbors() {
+    neighbors.listen("pose_estimates", 
+        function(vid, value, rid) {      
+            update_neighbor_pose_estimates(value)
+            has_received_pose_estimates = 1
+        }
+    )
+    if (optimizer_state() == 5) {
+        if (has_received_pose_estimates) {
+            # Check and reset flags if needed
+            check_if_all_estimation_done_and_reset()
+            if (optimizer_phase() == 1) {
+                estimate_pose_and_update_pose()
+            }
+        }
+    }
+}
+
+function send_rotation_estimation_finished_flag_to_neighbors() {
+    if (rotation_estimation_stopping_conditions()) {
+        neighbors.broadcast("rotation_estimation_is_finished", 1)
+    }
+}
+
+function receive_rotation_estimation_finished_flag_from_neighbors() {
+    neighbors.listen("rotation_estimation_is_finished", 
+        function(vid, value, rid) {      
+            neighbor_rotation_estimation_is_finished(rid)
+        }
+    )
+}
+
+function send_pose_estimation_finished_flag_to_neighbors() {
+    if (pose_estimation_stopping_conditions()) {
+        neighbors.broadcast("pose_estimation_is_finished", anchor_offset)
+    }
+}
+
+function receive_pose_estimation_finished_flag_from_neighbors() {
+    neighbors.listen("pose_estimation_is_finished", 
+        function(vid, value, rid) {      
+            neighbor_pose_estimation_is_finished(rid, value)
+        }
+    )
+}
+
+function send_optimizer_state_to_neighbors() {
+    state = {}
+    state[0] = optimizer_state()
+    state[1] = lowest_id_included_in_global_map
+    neighbors.broadcast("optimizer_state",state)
+}
+
+function receive_optimizer_state_from_neighbors() {
+    neighbors.listen("optimizer_state", 
+        function(vid, value, rid) {      
+            neighbor_state(rid, value[0], value[1])
+        }
+    )
+}

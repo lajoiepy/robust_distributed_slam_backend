@@ -1,0 +1,103 @@
+# Function share information between robots for separator detection without sensing.
+function send_pose_information(pose_id) {
+  update_current_pose_estimate(pose_id)
+  this_robot_pose_estimate = {
+    .pose_id = pose_id,
+    .estimate = current_pose_estimate
+  }
+  neighbors.broadcast("pose_information", this_robot_pose_estimate)
+}
+
+# Listen to neighbor poses
+function listen_for_pose_information() {
+  neighbors.listen("pose_information",
+    function(vid, value, rid) {   
+      # Save other robot estimate
+      update_pose_estimate_from_neighbor(rid, 
+                                        value.pose_id, 
+                                        value.estimate)
+    }
+  )  
+}
+
+# Function to detect inter-robot loop closures (separators) and save them, without sensing
+function separators_detection_dataset() {
+  current_separator_measurement_info = {}
+
+  # Add separator
+  is_added = add_separator()
+
+  if (is_added != 0) {
+    # Add own estimate to message
+    update_current_pose_estimate(pose_id_)
+    current_separator_measurement_info.initial_estimate = current_pose_estimate
+
+    # Add measurement to message
+    current_separator_measurement_info.measurement = current_separator_measurement
+
+    # Separator visualization
+    debug.rays.add(0,200,0, current_separator_measurement.x,current_separator_measurement.y,current_separator_measurement.z)
+    log("Robot ", id, " : Separator added, is outlier? ", 0)
+
+    # Broadcast separator measurements
+    neighbors.broadcast("separator_measurements", current_separator_measurement_info)
+  } else {
+    if (OUTLIER_PERIOD != 0) {
+      random_number = rand_uniform(0, OUTLIER_PERIOD) + 1
+      if ((not has_sent_separator) and random_number >= math.abs(current_step_ % OUTLIER_PERIOD - OUTLIER_PERIOD) ) {
+        is_added = add_separator_outlier()
+        if (is_added) {
+          # Add measurement to message
+          current_separator_measurement_info.measurement = current_separator_measurement
+
+          # Add own estimate to message
+          update_current_pose_estimate(current_separator_measurement.robot_1_pose_id)
+          current_separator_measurement_info.initial_estimate = current_pose_estimate
+
+          # Separator visualization
+          debug.rays.add(200,0,0, current_separator_measurement.x,current_separator_measurement.y,current_separator_measurement.z)
+          log("Robot ", id, " : Separator added, is outlier? ", 1)
+
+          # Broadcast separator measurements
+          neighbors.broadcast("separator_measurements", current_separator_measurement_info)
+          
+          has_sent_separator = 1
+        }
+      }
+      if (current_step_ % OUTLIER_PERIOD == 0) {
+        has_sent_separator = 0
+      }
+    }
+  }
+}
+
+# Function that listen for separators from neighbors
+function listen_for_separators() {
+  neighbors.listen("separator_measurements",
+    function(vid, value, rid) {         
+      # Send information to controller to add separator to graph if it concerns this robot
+      measurement = value.measurement
+      initial_estimate = value.initial_estimate
+      test1 = measurement.robot_1_id
+      test2 = measurement.robot_2_id
+      if (measurement.robot_1_id == id or measurement.robot_2_id == id) {
+        add_separator_to_local_graph(measurement.robot_1_id, measurement.robot_2_id, measurement.robot_1_pose_id, 
+                                        measurement.robot_2_pose_id, measurement.x, measurement.y, measurement.z, 
+                                        measurement.q_x, measurement.q_y, measurement.q_z, measurement.q_w,
+                                        measurement.covariance_matrix)
+        if (measurement.robot_1_id == id) {
+          update_pose_estimate_from_neighbor(measurement.robot_2_id, 
+                                            measurement.robot_2_pose_id, 
+                                            initial_estimate)
+          send_pose_information(measurement.robot_1_pose_id)
+        } else {
+          update_pose_estimate_from_neighbor(measurement.robot_1_id, 
+                                            measurement.robot_1_pose_id, 
+                                            initial_estimate)
+          send_pose_information(measurement.robot_2_pose_id)
+        }
+      }
+      
+    }
+  )
+}
