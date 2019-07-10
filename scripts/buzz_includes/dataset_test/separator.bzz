@@ -36,7 +36,7 @@ function separators_detection_dataset() {
     current_separator_measurement_info.measurement = current_separator_measurement
 
     # Separator visualization
-    print("Separator added");
+    print(current_step_, "Separator added");
 
     # Broadcast separator measurements
     neighbors.broadcast("separator_measurements", current_separator_measurement_info)
@@ -71,7 +71,7 @@ function listen_for_separators() {
   neighbors.listen("separator_measurements",
     function(vid, value, rid) {         
       # Send information to controller to add separator to graph if it concerns this robot
-      print("Separator received");
+      print(current_step_, "Separator received");
       measurement = value.measurement
       initial_estimate = value.initial_estimate
       test1 = measurement.robot_1_id

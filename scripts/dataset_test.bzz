@@ -41,7 +41,6 @@ function step() {
 
   # Move robot
   if (current_step_ % MOVEMENT_PERIOD == 0) {
-    print("Add odometry measurement");
     read_next_entry()
   }
   # State machine
@@ -56,7 +55,7 @@ function step() {
     separators_detection_dataset()
     send_start_optimization_flag()
   } else if (optimizer_state() == 1) {  # Start optimizing
-    print("Start optimization");
+    print(current_step_, "Start optimization");
     start_optimization()
   } else if (optimizer_state() == 3) {  # Rotation Estimation
     # Send estimates to neighbors
@@ -69,7 +68,7 @@ function step() {
     # Send finished flag if stopping conditions are met
     send_pose_estimation_finished_flag_to_neighbors()
   } else if (optimizer_state() == 6) {  # End optimization
-    print("End optimization");
+    print(current_step_, "End optimization");
     number_of_steps_at_optimization_end = current_step_
     number_of_steps_with_neighbors = 0
     neighbors_in_separator_range.foreach( function(neighbor_in_range_id, neighbor_in_range_data) {
