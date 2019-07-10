@@ -1,9 +1,0 @@
-# Calculates a random movement avoiding the outer walls
-function dataset_movement() {
-  pose_id_ = move()
-}
-
-function move_away() {
-  
-  
-}

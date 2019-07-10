@@ -1,0 +1,8 @@
+# Dataset name
+DATASET_NAME="/home/docker/robust_distributed_slam_module/scripts/datasets/kitti00/"
+# Sensor maximum range
+SENSOR_RANGE=10.0
+
+function load_slam_dataset_parameters() {
+    load_dataset_parameters(DATASET_NAME, SENSOR_RANGE, OUTLIER_PERIOD)
+}

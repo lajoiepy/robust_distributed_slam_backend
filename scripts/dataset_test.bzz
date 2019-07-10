@@ -1,11 +1,9 @@
 include "buzz_includes/buzz_utils/vec2.bzz"
 include "buzz_includes/buzz_utils/string.bzz"
 include "config/dataset_test/buzz_script_parameters.bzz"
-include "config/dataset_test/cpp_controller_parameters.bzz"
-include "config/dataset_test/cpp_controller_dataset_parameters.bzz"
+include "config/dataset_test/slam_parameters.bzz"
+include "config/dataset_test/slam_dataset_parameters.bzz"
 include "buzz_includes/dataset_test/global_variables.bzz"
-include "buzz_includes/debug.bzz"
-include "buzz_includes/dataset_test/movement.bzz"
 include "buzz_includes/dataset_test/separator.bzz"
 include "buzz_includes/dataset_test/pose_graph_optimization_trigger.bzz"
 include "buzz_includes/pose_graph_optimization.bzz"
@@ -14,13 +12,9 @@ include "buzz_includes/pose_graph_optimization.bzz"
 function init() {
   # Initialization of random number generator. The controller function use time+id as the seed.
   srand(id)
-  # Take off command for the Spiri drone model
-  takeoff()
   # Load parameters
-  load_cpp_controller_dataset_parameters()
-  load_cpp_controller_parameters()
-  # Show trajectory for debugging
-  show_colored_trajectory()
+  load_slam_dataset_parameters()
+  load_slam_parameters()
 }
  
 # Executed every time step
@@ -47,7 +41,7 @@ function step() {
 
   # Move robot
   if (current_step_ % MOVEMENT_PERIOD == 0) {
-    dataset_movement()
+    read_next_entry()
   }
   # State machine
   if (optimizer_state() == 0) { # Not optimizing
