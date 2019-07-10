@@ -62,21 +62,17 @@ function step() {
     send_start_optimization_flag()
   } else if (optimizer_state() == 1) {  # Start optimizing
     start_optimization()
-    debug.print("Start Optimization")
   } else if (optimizer_state() == 3) {  # Rotation Estimation
     # Send estimates to neighbors
     send_rotation_estimates_to_neighbors()
     # Send finished flag if stopping conditions are met
     send_rotation_estimation_finished_flag_to_neighbors()
-    debug.print("Rotation Estimation")
   } else if (optimizer_state() == 5) {  # PoseEstimation
     # Send estimates to neighbors
     send_pose_estimates_to_neighbors()
     # Send finished flag if stopping conditions are met
     send_pose_estimation_finished_flag_to_neighbors()
-    debug.print("Pose Estimation")
   } else if (optimizer_state() == 6) {  # End optimization
-    debug.print("End Optimization")
     number_of_steps_at_optimization_end = current_step_
     number_of_steps_with_neighbors = 0
     neighbors_in_separator_range.foreach( function(neighbor_in_range_id, neighbor_in_range_data) {
