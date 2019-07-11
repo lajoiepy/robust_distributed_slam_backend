@@ -15,6 +15,7 @@ CONSISTENCY_THRESHOLD = 0.90
 IS_SIMULATION=0
 NUMBER_OF_ROBOTS=5
 ERROR_FILE_NAME="/home/docker/robust_distributed_slam_module/scripts/log/datasets/results_kitti00.csv"
+LOG_FOLDER="/home/docker/robust_distributed_slam_module/scripts/log/datasets/"
 # Debug parameters
 DEBUG_PRINTS_LEVEL=3 # 0: Nothing, 1: Optimization Start/End and Outliers Filtering, 2: Error changes, 3: Optimizers Phase
 NUMBER_OF_STEPS_BEFORE_FAILSAFE=10
@@ -24,7 +25,8 @@ MAX_NUMBER_OF_POSE_ESTIMATION_STEPS=10000
 NUMBER_OF_STEP_BETWEEN_OPTIMIZATION = 908
 
 function load_slam_parameters() {
-    load_parameters(OPTIMIZER_PERIOD,
+    load_parameters(LOG_FOLDER,
+                    OPTIMIZER_PERIOD,
                     MAX_NUMBER_OF_ROTATION_ESTIMATION_STEPS,
                     MAX_NUMBER_OF_POSE_ESTIMATION_STEPS,
                     NUMBER_OF_STEPS_BEFORE_FAILSAFE,
