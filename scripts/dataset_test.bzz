@@ -41,7 +41,7 @@ function step() {
 
   # Move robot
   if (current_step_ % MOVEMENT_PERIOD == 0) {
-    read_next_entry()
+    pose_id_ = read_next_entry()
   }
   # State machine
   if (optimizer_state() == 0) { # Not optimizing
