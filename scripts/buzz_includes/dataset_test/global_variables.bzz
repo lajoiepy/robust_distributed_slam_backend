@@ -13,3 +13,4 @@ var has_neighbors = 0
 var number_of_steps_with_neighbors = 0
 var number_of_steps_at_optimization_end = 0
 var last_optimization_neighbor = -1
+var start_step_received = 0

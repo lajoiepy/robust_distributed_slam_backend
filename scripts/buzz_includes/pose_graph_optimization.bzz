@@ -4,7 +4,7 @@ function listen_for_start_optimization_flag() {
             is_neighbor = 0
             neighbors_in_communication_range = neighbors.filter(
                 function(rid, data) { 
-                    return data.distance < (100 * SEPARATOR_RANGE) # ARGoS simulation is in centimeters
+                    return data.distance < (100 * SEPARATOR_RANGE) and (not (rid == 1000)) # ARGoS simulation is in centimeters
                 }
             )
             neighbors_in_communication_range.foreach( function(rid, data) {
@@ -25,7 +25,7 @@ function start_optimization() {
     # Add current neigbors
     neighbors_in_separator_range = neighbors.filter(
       function(rid, data) { 
-        return data.distance < (100 * SEPARATOR_RANGE) # ARGoS simulation is in centimeters
+        return data.distance < (100 * SEPARATOR_RANGE) and (not (rid == 1000)) # ARGoS simulation is in centimeters
       }
     )
     neighbors_in_separator_range.foreach( function(rid, data) {
