@@ -7,6 +7,7 @@ include "buzz_includes/dataset_test/global_variables.bzz"
 include "buzz_includes/dataset_test/separator.bzz"
 include "buzz_includes/dataset_test/pose_graph_optimization_trigger.bzz"
 include "buzz_includes/pose_graph_optimization.bzz"
+include "buzz_includes/schedule.bzz"
 
 # Executed at init time
 function init() {
@@ -84,15 +85,20 @@ function step() {
   # Listen for scheduler
   neighbors.listen("start_step", 
     function(vid, value, rid) {   
-      print(current_step_, "recv start")
       start_step_received = 1
     }
   )
-  if (start_step_received) {
-    execute_step()
-    print(current_step_, "send end_step")
-    neighbors.broadcast("end_step", 1)
-    start_step_received = 0
+  if (id == 0) {
+    start_step = schedule(NUMBER_OF_ROBOTS-1)
+    if (start_step == 1) {
+      execute_step()
+    }
+  } else {
+    if (start_step_received) {
+      execute_step()
+      neighbors.broadcast("end_step", 1)
+      start_step_received = 0
+    }
   }
 }
  

@@ -1,0 +1,27 @@
+var current_schedule_step_ = 0
+var reception_counter_ = 0
+
+# Executed every time step
+function schedule(number_of_robots) {
+  start_step = 0
+  if (current_schedule_step_ == 2) {
+    neighbors.broadcast("start_step", 1)
+    start_step = 1
+  }
+
+  neighbors.listen("end_step", 
+    function(vid, value, rid) {    
+        reception_counter_ = reception_counter_ + 1
+    }
+  )
+ 
+  if (reception_counter_ >= number_of_robots) {
+    reception_counter_ = 0
+    neighbors.broadcast("start_step", 1)
+    start_step = 1
+  }
+
+  current_schedule_step_ = current_schedule_step_ + 1
+  return start_step
+}
+ 
