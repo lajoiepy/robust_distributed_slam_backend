@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   geometry_msgs
   rtabmap_ros
+  multi_robot_separators
 )
 include_directories(${catkin_INCLUDE_DIRS})
 
