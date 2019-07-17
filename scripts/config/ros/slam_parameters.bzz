@@ -14,8 +14,8 @@ CONSISTENCY_THRESHOLD = 0.90
 # Simulation specific parameters
 IS_SIMULATION=0
 NUMBER_OF_ROBOTS=5
-ERROR_FILE_NAME="/home/docker/robust_distributed_slam_module/scripts/log/datasets/results_kitti00.csv"
-LOG_FOLDER="/home/docker/robust_distributed_slam_module/scripts/log/datasets/"
+ERROR_FILE_NAME="/root/rdpgo_ws/src/robust_distributed_slam_module/scripts/log/datasets/results_kitti00.csv"
+LOG_FOLDER="/root/rdpgo_ws/src/robust_distributed_slam_module/scripts/log/datasets/"
 # Debug parameters
 DEBUG_PRINTS_LEVEL=3 # 0: Nothing, 1: Optimization Start/End and Outliers Filtering, 2: Error changes, 3: Optimizers Phase
 NUMBER_OF_STEPS_BEFORE_FAILSAFE=10

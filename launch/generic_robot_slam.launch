@@ -1,6 +1,6 @@
 <launch>
     <arg name="local_robot_id" default="0" />  
-    <arg name="other_robot_id" default="1" />  
+    <arg name="other_robot_id" default="0" />  
     <arg name="message_size" default="100000" />  
     <arg name="buzz_script_name" default="/root/rdpgo_ws/src/robust_distributed_slam_module/scripts/ros_slam" /> 
     <arg name="port" default="24580" />  
