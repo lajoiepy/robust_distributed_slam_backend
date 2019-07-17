@@ -13,7 +13,9 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   rtabmap_ros
   multi_robot_separators
+  roslaunch
 )
+roslaunch_add_file_check(launch)
 include_directories(${catkin_INCLUDE_DIRS})
 
 catkin_package(

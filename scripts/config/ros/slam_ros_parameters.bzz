@@ -1,0 +1,6 @@
+# Sensor maximum range
+SENSOR_RANGE=10.0
+
+function load_slam_ros_parameters() {
+    load_ros_parameters(SENSOR_RANGE, OUTLIER_PERIOD)
+}
