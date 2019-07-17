@@ -14,8 +14,8 @@
             <param name="robot_id" type="int" value="$(arg local_robot_id)"/>
             <param name="port" type="string" value="$(arg port)"/>
             <param name="next_robot_id" type="int" value="$(arg other_robot_id)"/>
-            <param name="rotation_std" type="double" value="$(arg other_robot_id)"/>
-            <param name="translation_std" type="double" value="$(arg other_robot_id)"/>
+            <param name="rotation_std" type="double" value="$(arg rotation_std)"/>
+            <param name="translation_std" type="double" value="$(arg translation_std)"/>
         </node>
     </group>
 </launch>
