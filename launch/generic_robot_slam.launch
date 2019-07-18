@@ -1,11 +1,11 @@
 <launch>
     <arg name="local_robot_id" default="0" />  
-    <arg name="other_robot_id" default="0" />  
+    <arg name="other_robot_id" default="1" />  
     <arg name="message_size" default="100000" />  
     <arg name="buzz_script_name" default="/root/rdpgo_ws/src/robust_distributed_slam_module/scripts/ros_slam" /> 
     <arg name="port" default="24580" />  
-    <arg name="rotation_std" default="0.01" />  
-    <arg name="translation_std" default="0.1" />  
+    <arg name="rotation_std" default="0.05" />  
+    <arg name="translation_std" default="0.3" />  
     
     <group ns="robot_$(arg local_robot_id)">
         <node pkg="robust_distributed_slam_module" type="generic_robot_buzz_slam_node" name="robust_distributed_slam_module">

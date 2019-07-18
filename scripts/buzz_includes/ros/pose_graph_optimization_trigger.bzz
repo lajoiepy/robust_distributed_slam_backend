@@ -1,5 +1,5 @@
 function send_start_optimization_flag() {
-    if (current_step_ != 0 and current_step_ % NUMBER_OF_STEP_BETWEEN_OPTIMIZATION == 0) {
+    if (start_optimization_triggered() == 1) {
         update_adjacency_vector()
         neighbors.broadcast("start_optimization", adjacency_vector)
         update_has_sent_start_optimization_flag()
