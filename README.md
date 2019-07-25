@@ -5,7 +5,7 @@ It assumes that robot 0 has the IP address = `192.168.12.100`, robot 1 = `192.16
 ## On the TX2s
 ### Launch the camera driver
 ```
-tx2-docker run --net host --privileged -v /dev/bus/usb:/dev/bus/usb -it realsense MASTER_URI ROBOT_ID camera
+tx2-docker run --net host --privileged -v /dev/bus/usb:/dev/bus/usb -it realsense-tx2 MASTER_URI ROBOT_ID camera
 ```
 
 ### Launch the distributed optimization /home/nvidia/Desktop
