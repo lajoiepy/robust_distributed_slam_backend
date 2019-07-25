@@ -5,12 +5,12 @@ It assumes that robot 0 has the IP address = `192.168.12.100`, robot 1 = `192.16
 ## On the TX2s
 ### Launch the camera driver
 ```
-tx2-docker run --net host --privileged -v /dev/bus/usb:/dev/bus/usb -it realsense ROBOT_ID
+tx2-docker run --net host --privileged -v /dev/bus/usb:/dev/bus/usb -it realsense MASTER_URI ROBOT_ID camera
 ```
 
 ### Launch the distributed optimization /home/nvidia/Desktop
 ```
-tx2-docker run --net host --privileged -v /home/nvidia/Desktop:/root/rdpgo_ws/src/robust_distributed_slam_module/scripts/log -it multi_robot_slam ROBOT_ID NEXT_ROBOT_ID optimization
+tx2-docker run --net host --privileged -v /home/nvidia/Desktop:/root/rdpgo_ws/src/robust_distributed_slam_module/scripts/log -it multi_robot_slam MASTER_URI ROBOT_ID NEXT_ROBOT_ID optimization
 ```
 
 ## On a computer with blabbermouth (possibly one of the TX2)
@@ -22,5 +22,5 @@ tx2-docker run --net host --privileged -v /home/nvidia/Desktop:/root/rdpgo_ws/sr
 ## On the TX2s
 ### Launch the multi robot separators detection
 ```
-tx2-docker run --net host --privileged -v /home/nvidia/Desktop:/root/rdpgo_ws/src/robust_distributed_slam_module/scripts/log -it multi_robot_slam ROBOT_ID NEXT_ROBOT_ID separators
+tx2-docker run --net host --privileged -v /home/nvidia/Desktop:/root/rdpgo_ws/src/robust_distributed_slam_module/scripts/log -it multi_robot_slam MASTER_URI ROBOT_ID NEXT_ROBOT_ID separators
 ```
