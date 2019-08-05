@@ -18,10 +18,13 @@ function init() {
 }
 
 function execute_step() {
-  print(current_step_, " Step")
   if (current_step_ == 0) {
     # Init optimizer
     init_optimizer(OPTIMIZER_PERIOD)
+  }
+  
+  if (current_step_ == 5) {
+    print(current_step_, " : Communication is OK")
   }
   # Optimizer clock tick to trigger the state machine
   optimizer_tick()
