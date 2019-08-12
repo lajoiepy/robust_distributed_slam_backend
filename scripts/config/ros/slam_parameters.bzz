@@ -13,14 +13,14 @@ USE_PCM = 1
 CONSISTENCY_THRESHOLD = 0.90
 # Simulation specific parameters
 IS_SIMULATION=0
-NUMBER_OF_ROBOTS=3
+NUMBER_OF_ROBOTS=2
 ERROR_FILE_NAME="/root/rdpgo_ws/src/robust_distributed_slam_module/scripts/log/datasets/results.csv"
 LOG_FOLDER="/root/rdpgo_ws/src/robust_distributed_slam_module/scripts/log/datasets/"
 # Debug parameters
 DEBUG_PRINTS_LEVEL=2 # 0: Nothing, 1: Optimization Start/End and Outliers Filtering, 2: Error changes, 3: Optimizers Phase
 NUMBER_OF_STEPS_BEFORE_FAILSAFE=10
-MAX_NUMBER_OF_ROTATION_ESTIMATION_STEPS=10000 # Avoid cases when the convergence is really slow (quite rare)
-MAX_NUMBER_OF_POSE_ESTIMATION_STEPS=10000
+MAX_NUMBER_OF_ROTATION_ESTIMATION_STEPS=1000000 # Avoid cases when the convergence is really slow (quite rare)
+MAX_NUMBER_OF_POSE_ESTIMATION_STEPS=1000000
 # Optimization
 NUMBER_OF_STEP_BETWEEN_OPTIMIZATION = 908
 
