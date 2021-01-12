@@ -20,9 +20,9 @@ tx2-docker run --net host --privileged -v /home/nvidia/Desktop:/root/rdpgo_ws/sr
 ```
 
 ## On the TX2s
-### Launch the multi robot separators detection
+### Launch the multi robot loopclosures detection
 ```
-tx2-docker run --net host --privileged -v /home/nvidia/Desktop:/root/rdpgo_ws/src/robust_distributed_slam_module/scripts/log -it multi_robot_slam MASTER_URI ROBOT_ID NEXT_ROBOT_ID separators record(optional)
+tx2-docker run --net host --privileged -v /home/nvidia/Desktop:/root/rdpgo_ws/src/robust_distributed_slam_module/scripts/log -it multi_robot_slam MASTER_URI ROBOT_ID NEXT_ROBOT_ID loopclosures record(optional)
 ```
 
 ### Launch with bag

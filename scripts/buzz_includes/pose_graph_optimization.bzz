@@ -4,7 +4,7 @@ function listen_for_start_optimization_flag() {
             is_neighbor = 0
             neighbors_in_communication_range = neighbors.filter(
                 function(rid, data) { 
-                    return data.distance < (100 * SEPARATOR_RANGE) and (not (rid == 1000)) # ARGoS simulation is in centimeters
+                    return data.distance < (100 * loopclosure_RANGE) and (not (rid == 1000)) # ARGoS simulation is in centimeters
                 }
             )
             neighbors_in_communication_range.foreach( function(rid, data) {
@@ -23,12 +23,12 @@ function listen_for_start_optimization_flag() {
 
 function start_optimization() {
     # Add current neigbors
-    neighbors_in_separator_range = neighbors.filter(
+    neighbors_in_loopclosure_range = neighbors.filter(
       function(rid, data) { 
-        return data.distance < (100 * SEPARATOR_RANGE) and (not (rid == 1000)) # ARGoS simulation is in centimeters
+        return data.distance < (100 * loopclosure_RANGE) and (not (rid == 1000)) # ARGoS simulation is in centimeters
       }
     )
-    neighbors_in_separator_range.foreach( function(rid, data) {
+    neighbors_in_loopclosure_range.foreach( function(rid, data) {
         add_neighbor_within_communication_range(rid)
       }
     )
@@ -40,7 +40,7 @@ function start_optimization() {
 function send_rotation_estimates_to_neighbors() {
     rotation_estimates_table = {}
     number_of_estimates_to_send = 0
-    neighbors_in_separator_range.foreach( function(neighbor_in_range_id, neighbor_in_range_data) {
+    neighbors_in_loopclosure_range.foreach( function(neighbor_in_range_id, neighbor_in_range_data) {
         # Update rotation_estimates_to_send structure
         compute_and_update_rotation_estimates_to_send(neighbor_in_range_id)
         if (size(rotation_estimates_to_send) > 0){
@@ -76,7 +76,7 @@ function receive_and_update_rotation_estimates_from_neighbors() {
 function send_pose_estimates_to_neighbors() {
     pose_estimates_table = {}
     number_of_estimates_to_send = 0
-    neighbors_in_separator_range.foreach( function(neighbor_in_range_id, neighbor_in_range_data) {
+    neighbors_in_loopclosure_range.foreach( function(neighbor_in_range_id, neighbor_in_range_data) {
         # Update pose_estimates_to_send structure
         compute_and_update_pose_estimates_to_send(neighbor_in_range_id)
         if (size(pose_estimates_to_send) > 0){
